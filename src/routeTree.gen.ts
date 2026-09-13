@@ -10,33 +10,115 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as BottleneckRouteImport } from './routes/bottleneck'
+import { Route as CommunityDnaRouteImport } from './routes/community-dna'
+import { Route as NetworkGrowthRouteImport } from './routes/network-growth'
+import { Route as RideMatchesRouteImport } from './routes/ride-matches'
+import { Route as RippleSimulatorRouteImport } from './routes/ripple-simulator'
+import { Route as SeedFinderRouteImport } from './routes/seed-finder'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const BottleneckRoute = BottleneckRouteImport.update({
+  id: '/bottleneck',
+  path: '/bottleneck',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CommunityDnaRoute = CommunityDnaRouteImport.update({
+  id: '/community-dna',
+  path: '/community-dna',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const NetworkGrowthRoute = NetworkGrowthRouteImport.update({
+  id: '/network-growth',
+  path: '/network-growth',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RideMatchesRoute = RideMatchesRouteImport.update({
+  id: '/ride-matches',
+  path: '/ride-matches',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RippleSimulatorRoute = RippleSimulatorRouteImport.update({
+  id: '/ripple-simulator',
+  path: '/ripple-simulator',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SeedFinderRoute = SeedFinderRouteImport.update({
+  id: '/seed-finder',
+  path: '/seed-finder',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/bottleneck': typeof BottleneckRoute
+  '/community-dna': typeof CommunityDnaRoute
+  '/network-growth': typeof NetworkGrowthRoute
+  '/ride-matches': typeof RideMatchesRoute
+  '/ripple-simulator': typeof RippleSimulatorRoute
+  '/seed-finder': typeof SeedFinderRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/bottleneck': typeof BottleneckRoute
+  '/community-dna': typeof CommunityDnaRoute
+  '/network-growth': typeof NetworkGrowthRoute
+  '/ride-matches': typeof RideMatchesRoute
+  '/ripple-simulator': typeof RippleSimulatorRoute
+  '/seed-finder': typeof SeedFinderRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/bottleneck': typeof BottleneckRoute
+  '/community-dna': typeof CommunityDnaRoute
+  '/network-growth': typeof NetworkGrowthRoute
+  '/ride-matches': typeof RideMatchesRoute
+  '/ripple-simulator': typeof RippleSimulatorRoute
+  '/seed-finder': typeof SeedFinderRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/bottleneck'
+    | '/community-dna'
+    | '/network-growth'
+    | '/ride-matches'
+    | '/ripple-simulator'
+    | '/seed-finder'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/bottleneck'
+    | '/community-dna'
+    | '/network-growth'
+    | '/ride-matches'
+    | '/ripple-simulator'
+    | '/seed-finder'
+  id:
+    | '__root__'
+    | '/'
+    | '/bottleneck'
+    | '/community-dna'
+    | '/network-growth'
+    | '/ride-matches'
+    | '/ripple-simulator'
+    | '/seed-finder'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  BottleneckRoute: typeof BottleneckRoute
+  CommunityDnaRoute: typeof CommunityDnaRoute
+  NetworkGrowthRoute: typeof NetworkGrowthRoute
+  RideMatchesRoute: typeof RideMatchesRoute
+  RippleSimulatorRoute: typeof RippleSimulatorRoute
+  SeedFinderRoute: typeof SeedFinderRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +130,59 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/bottleneck': {
+      id: '/bottleneck'
+      path: '/bottleneck'
+      fullPath: '/bottleneck'
+      preLoaderRoute: typeof BottleneckRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/community-dna': {
+      id: '/community-dna'
+      path: '/community-dna'
+      fullPath: '/community-dna'
+      preLoaderRoute: typeof CommunityDnaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/network-growth': {
+      id: '/network-growth'
+      path: '/network-growth'
+      fullPath: '/network-growth'
+      preLoaderRoute: typeof NetworkGrowthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/ride-matches': {
+      id: '/ride-matches'
+      path: '/ride-matches'
+      fullPath: '/ride-matches'
+      preLoaderRoute: typeof RideMatchesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/ripple-simulator': {
+      id: '/ripple-simulator'
+      path: '/ripple-simulator'
+      fullPath: '/ripple-simulator'
+      preLoaderRoute: typeof RippleSimulatorRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/seed-finder': {
+      id: '/seed-finder'
+      path: '/seed-finder'
+      fullPath: '/seed-finder'
+      preLoaderRoute: typeof SeedFinderRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  BottleneckRoute: BottleneckRoute,
+  CommunityDnaRoute: CommunityDnaRoute,
+  NetworkGrowthRoute: NetworkGrowthRoute,
+  RideMatchesRoute: RideMatchesRoute,
+  RippleSimulatorRoute: RippleSimulatorRoute,
+  SeedFinderRoute: SeedFinderRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
