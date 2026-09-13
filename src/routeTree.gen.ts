@@ -10,33 +10,63 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as BottleneckRouteImport } from './routes/bottleneck'
+import { Route as CommunityDnaRouteImport } from './routes/community-dna'
+import { Route as SeedFinderRouteImport } from './routes/seed-finder'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const BottleneckRoute = BottleneckRouteImport.update({
+  id: '/bottleneck',
+  path: '/bottleneck',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CommunityDnaRoute = CommunityDnaRouteImport.update({
+  id: '/community-dna',
+  path: '/community-dna',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SeedFinderRoute = SeedFinderRouteImport.update({
+  id: '/seed-finder',
+  path: '/seed-finder',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/bottleneck': typeof BottleneckRoute
+  '/community-dna': typeof CommunityDnaRoute
+  '/seed-finder': typeof SeedFinderRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/bottleneck': typeof BottleneckRoute
+  '/community-dna': typeof CommunityDnaRoute
+  '/seed-finder': typeof SeedFinderRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/bottleneck': typeof BottleneckRoute
+  '/community-dna': typeof CommunityDnaRoute
+  '/seed-finder': typeof SeedFinderRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths: '/' | '/bottleneck' | '/community-dna' | '/seed-finder'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to: '/' | '/bottleneck' | '/community-dna' | '/seed-finder'
+  id: '__root__' | '/' | '/bottleneck' | '/community-dna' | '/seed-finder'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  BottleneckRoute: typeof BottleneckRoute
+  CommunityDnaRoute: typeof CommunityDnaRoute
+  SeedFinderRoute: typeof SeedFinderRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +78,35 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/bottleneck': {
+      id: '/bottleneck'
+      path: '/bottleneck'
+      fullPath: '/bottleneck'
+      preLoaderRoute: typeof BottleneckRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/community-dna': {
+      id: '/community-dna'
+      path: '/community-dna'
+      fullPath: '/community-dna'
+      preLoaderRoute: typeof CommunityDnaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/seed-finder': {
+      id: '/seed-finder'
+      path: '/seed-finder'
+      fullPath: '/seed-finder'
+      preLoaderRoute: typeof SeedFinderRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  BottleneckRoute: BottleneckRoute,
+  CommunityDnaRoute: CommunityDnaRoute,
+  SeedFinderRoute: SeedFinderRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

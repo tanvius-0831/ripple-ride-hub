@@ -54,7 +54,7 @@ function CommunityDna() {
                 label={`${c.label} — ${c.vehicles} vehicles`}
                 value={c.vehicles}
                 max={10}
-                tone={(["primary", "cyan", "violet"] as const)[i % 3]}
+                tone={i === 0 ? "primary" : i === 1 ? "cyan" : "violet"}
               />
             ))}
           </div>
