@@ -18,7 +18,45 @@ export type Vehicle = {
   model: string;
   capacity: number;
   availableSeats: number;
+  wheelchairAccessible: boolean;
+  stepFreeEntry: boolean;
+  extraLuggageSpace: boolean;
 };
+
+export type AccessibilityNeed =
+  | "Wheelchair accessible"
+  | "Mobility assistance"
+  | "Step-free access"
+  | "Extra boarding time"
+  | "Visual assistance"
+  | "Hearing assistance"
+  | "No additional assistance required";
+
+export type HealthNeed =
+  | "Medication timing"
+  | "Allergy alert"
+  | "Emergency support requirement"
+  | "Chronic condition support"
+  | "No health-related support needed";
+
+export type EmergencyContact = { name: string; relationship: string };
+
+export type ScoreBreakdown = {
+  route: number;
+  timing: number;
+  capacity: number;
+  accessibility: number;
+  preference: number;
+};
+
+export const ACCESSIBILITY_OPTIONS: AccessibilityNeed[] = [
+  "Wheelchair accessible",
+  "Mobility assistance",
+  "Step-free access",
+  "Extra boarding time",
+  "Visual assistance",
+  "Hearing assistance",
+];
 
 export type Ride = {
   id: string;
@@ -30,6 +68,7 @@ export type Ride = {
   destination: string;
   departure: string;
   compatibility: number;
+  scoreBreakdown: ScoreBreakdown;
   vehicle: Vehicle;
   womenOnly: boolean;
   womenOnlyAvailable: boolean;
@@ -37,7 +76,12 @@ export type Ride = {
   verified: boolean;
   signals: string[];
   impactScore: number;
+  impactFactors: { label: string; level: "HIGH" | "MEDIUM" | "LOW" }[];
   reason: string;
+  accessibilityNeeds: AccessibilityNeed[];
+  healthNeeds: HealthNeed[];
+  healthNote?: string;
+  emergencyContact: EmergencyContact;
   passengers: { name: string; gender: "female" | "male" }[];
 };
 
@@ -52,19 +96,85 @@ export const RIDES: Ride[] = [
     destination: "Northbridge Institute of Technology",
     departure: "8:10 AM",
     compatibility: 92,
-    vehicle: { type: "Hatchback", model: "Hyundai i20", capacity: 5, availableSeats: 3 },
+    scoreBreakdown: { route: 38, timing: 24, capacity: 19, accessibility: 10, preference: 1 },
+    vehicle: {
+      type: "Hatchback",
+      model: "Hyundai i20",
+      capacity: 5,
+      availableSeats: 3,
+      wheelchairAccessible: false,
+      stepFreeEntry: true,
+      extraLuggageSpace: false,
+    },
     womenOnly: false,
     womenOnlyAvailable: true,
     audioAvailable: true,
     verified: true,
     signals: ["Route match", "Time match", "Community match"],
     impactScore: 94,
+    impactFactors: [
+      { label: "Route overlap", level: "HIGH" },
+      { label: "Timing overlap", level: "HIGH" },
+      { label: "Seat capacity", level: "HIGH" },
+      { label: "Connector value", level: "MEDIUM" },
+      { label: "Accessibility", level: "MEDIUM" },
+      { label: "Resilience", level: "HIGH" },
+    ],
     reason: "High route overlap + high seat capacity + peak-time travel",
+    accessibilityNeeds: ["No additional assistance required"],
+    healthNeeds: ["No health-related support needed"],
+    emergencyContact: { name: "Ananya Rao", relationship: "Sister" },
     passengers: [
       { name: "Ishan", gender: "male" },
       { name: "Sneha", gender: "female" },
       { name: "Kabir", gender: "male" },
       { name: "Ananya", gender: "female" },
+    ],
+  },
+  {
+    id: "kiran",
+    driver: "Kiran",
+    gender: "female",
+    role: "Driver",
+    origin: "Whitefield",
+    via: "Hoodi",
+    destination: "Northbridge Institute of Technology",
+    departure: "8:15 AM",
+    compatibility: 90,
+    scoreBreakdown: { route: 37, timing: 23, capacity: 19, accessibility: 10, preference: 1 },
+    vehicle: {
+      type: "MPV",
+      model: "Kia Carens",
+      capacity: 6,
+      availableSeats: 3,
+      wheelchairAccessible: true,
+      stepFreeEntry: true,
+      extraLuggageSpace: true,
+    },
+    womenOnly: false,
+    womenOnlyAvailable: true,
+    audioAvailable: true,
+    verified: true,
+    signals: ["Route match", "Time match", "Accessibility match"],
+    impactScore: 96,
+    impactFactors: [
+      { label: "Route overlap", level: "HIGH" },
+      { label: "Timing overlap", level: "HIGH" },
+      { label: "Seat capacity", level: "HIGH" },
+      { label: "Connector value", level: "MEDIUM" },
+      { label: "Accessibility", level: "HIGH" },
+      { label: "Resilience", level: "HIGH" },
+    ],
+    reason:
+      "Only wheelchair-compatible vehicle on the Whitefield corridor — unlocks an otherwise underserved group",
+    accessibilityNeeds: ["Wheelchair accessible", "Step-free access"],
+    healthNeeds: ["Medication timing"],
+    healthNote: "Medication reminder around 8:30 AM",
+    emergencyContact: { name: "Latha Menon", relationship: "Mother" },
+    passengers: [
+      { name: "Dev", gender: "male" },
+      { name: "Ira", gender: "female" },
+      { name: "Manav", gender: "male" },
     ],
   },
   {
@@ -77,14 +187,35 @@ export const RIDES: Ride[] = [
     destination: "Northbridge Institute of Technology",
     departure: "8:25 AM",
     compatibility: 88,
-    vehicle: { type: "Sedan", model: "Honda City", capacity: 5, availableSeats: 2 },
+    scoreBreakdown: { route: 36, timing: 23, capacity: 18, accessibility: 7, preference: 4 },
+    vehicle: {
+      type: "Sedan",
+      model: "Honda City",
+      capacity: 5,
+      availableSeats: 2,
+      wheelchairAccessible: false,
+      stepFreeEntry: true,
+      extraLuggageSpace: true,
+    },
     womenOnly: true,
     womenOnlyAvailable: true,
     audioAvailable: true,
     verified: true,
     signals: ["Route match", "Time match", "Hostel cluster match"],
     impactScore: 91,
+    impactFactors: [
+      { label: "Route overlap", level: "HIGH" },
+      { label: "Timing overlap", level: "HIGH" },
+      { label: "Seat capacity", level: "MEDIUM" },
+      { label: "Connector value", level: "HIGH" },
+      { label: "Accessibility", level: "MEDIUM" },
+      { label: "Resilience", level: "MEDIUM" },
+    ],
     reason: "Anchors the women-only cluster + reliable peak-hour departure",
+    accessibilityNeeds: ["Step-free access"],
+    healthNeeds: ["Allergy alert"],
+    healthNote: "Severe allergy — emergency contact required",
+    emergencyContact: { name: "Rhea Nair", relationship: "Roommate" },
     passengers: [
       { name: "Divya", gender: "female" },
       { name: "Priya", gender: "female" },
@@ -101,14 +232,34 @@ export const RIDES: Ride[] = [
     destination: "Northbridge Institute of Technology",
     departure: "8:40 AM",
     compatibility: 84,
-    vehicle: { type: "SUV", model: "Tata Nexon", capacity: 5, availableSeats: 3 },
+    scoreBreakdown: { route: 34, timing: 21, capacity: 18, accessibility: 7, preference: 4 },
+    vehicle: {
+      type: "SUV",
+      model: "Tata Nexon",
+      capacity: 5,
+      availableSeats: 3,
+      wheelchairAccessible: false,
+      stepFreeEntry: false,
+      extraLuggageSpace: true,
+    },
     womenOnly: false,
     womenOnlyAvailable: true,
     audioAvailable: true,
     verified: true,
     signals: ["Route match", "Department match", "Community match"],
     impactScore: 87,
+    impactFactors: [
+      { label: "Route overlap", level: "HIGH" },
+      { label: "Timing overlap", level: "MEDIUM" },
+      { label: "Seat capacity", level: "HIGH" },
+      { label: "Connector value", level: "HIGH" },
+      { label: "Accessibility", level: "LOW" },
+      { label: "Resilience", level: "MEDIUM" },
+    ],
     reason: "Bridges two disconnected residential clusters",
+    accessibilityNeeds: ["No additional assistance required"],
+    healthNeeds: ["No health-related support needed"],
+    emergencyContact: { name: "Sahil Verma", relationship: "Brother" },
     passengers: [
       { name: "Vikram", gender: "male" },
       { name: "Tanvi", gender: "female" },
@@ -125,14 +276,34 @@ export const RIDES: Ride[] = [
     destination: "Northbridge Institute of Technology",
     departure: "8:05 AM",
     compatibility: 79,
-    vehicle: { type: "Hatchback", model: "Maruti Baleno", capacity: 5, availableSeats: 2 },
+    scoreBreakdown: { route: 32, timing: 20, capacity: 16, accessibility: 7, preference: 4 },
+    vehicle: {
+      type: "Hatchback",
+      model: "Maruti Baleno",
+      capacity: 5,
+      availableSeats: 2,
+      wheelchairAccessible: false,
+      stepFreeEntry: true,
+      extraLuggageSpace: false,
+    },
     womenOnly: true,
     womenOnlyAvailable: true,
     audioAvailable: true,
     verified: true,
     signals: ["Time match", "Community match"],
     impactScore: 82,
+    impactFactors: [
+      { label: "Route overlap", level: "MEDIUM" },
+      { label: "Timing overlap", level: "HIGH" },
+      { label: "Seat capacity", level: "MEDIUM" },
+      { label: "Connector value", level: "MEDIUM" },
+      { label: "Accessibility", level: "MEDIUM" },
+      { label: "Resilience", level: "MEDIUM" },
+    ],
     reason: "Earliest departure covering the southern corridor",
+    accessibilityNeeds: ["Hearing assistance"],
+    healthNeeds: ["No health-related support needed"],
+    emergencyContact: { name: "Kavya Iyer", relationship: "Friend" },
     passengers: [
       { name: "Pooja", gender: "female" },
       { name: "Lakshmi", gender: "female" },
@@ -148,14 +319,35 @@ export const RIDES: Ride[] = [
     destination: "Northbridge Institute of Technology",
     departure: "8:30 AM",
     compatibility: 76,
-    vehicle: { type: "MPV", model: "Maruti Ertiga", capacity: 7, availableSeats: 4 },
+    scoreBreakdown: { route: 31, timing: 19, capacity: 18, accessibility: 5, preference: 3 },
+    vehicle: {
+      type: "MPV",
+      model: "Maruti Ertiga",
+      capacity: 7,
+      availableSeats: 4,
+      wheelchairAccessible: false,
+      stepFreeEntry: true,
+      extraLuggageSpace: true,
+    },
     womenOnly: false,
     womenOnlyAvailable: true,
     audioAvailable: true,
     verified: true,
     signals: ["Route match", "Club overlap"],
     impactScore: 85,
+    impactFactors: [
+      { label: "Route overlap", level: "MEDIUM" },
+      { label: "Timing overlap", level: "MEDIUM" },
+      { label: "Seat capacity", level: "HIGH" },
+      { label: "Connector value", level: "HIGH" },
+      { label: "Accessibility", level: "MEDIUM" },
+      { label: "Resilience", level: "HIGH" },
+    ],
     reason: "Largest seat capacity + connects 3 friend circles",
+    accessibilityNeeds: ["Extra boarding time"],
+    healthNeeds: ["Emergency support requirement"],
+    healthNote: "Requires access to emergency support",
+    emergencyContact: { name: "Neel Shetty", relationship: "Cousin" },
     passengers: [
       { name: "Rahul", gender: "male" },
       { name: "Sara", gender: "female" },
@@ -164,6 +356,50 @@ export const RIDES: Ride[] = [
     ],
   },
 ];
+
+/** Rule-based accessibility compatibility between a passenger's needs and a ride's vehicle. */
+export function accessibilityCompatible(ride: Ride, needs: AccessibilityNeed[]): boolean {
+  return needs.every((n) => {
+    if (n === "Wheelchair accessible") return ride.vehicle.wheelchairAccessible;
+    if (n === "Step-free access") return ride.vehicle.stepFreeEntry;
+    if (n === "Mobility assistance") return ride.vehicle.stepFreeEntry;
+    return true;
+  });
+}
+
+/** Finds simulated alternative rides in the same community after a breakdown. */
+export function findAlternatives(ride: Ride, needs: AccessibilityNeed[], womenOnly: boolean) {
+  return RIDES.filter(
+    (r) =>
+      r.id !== ride.id &&
+      r.vehicle.availableSeats > 0 &&
+      accessibilityCompatible(r, needs) &&
+      (!womenOnly || (r.womenOnlyAvailable && r.gender === "female")),
+  ).slice(0, 2);
+}
+
+export const ACCESSIBILITY_COVERAGE = {
+  wheelchairVehicles: 6,
+  stepFreeVehicles: 8,
+  usersRequiringSupport: 4,
+  compatibleRideOpportunities: 7,
+};
+
+export const RESILIENCE = {
+  activeParticipants: 28,
+  availableRideOptions: 9,
+  alternativeRideOptions: 3,
+  level: "HIGH" as const,
+};
+
+export const EMERGENCY_OPTIONS = [
+  { icon: "🚑", label: "Ambulance", detail: "Emergency assistance (simulated)" },
+  { icon: "🛡", label: "Campus Security", detail: "Northbridge Institute (simulated)" },
+  { icon: "📞", label: "FellaFlow Ride Support", detail: "Ride-related assistance (simulated)" },
+];
+
+export const PRIVACY_NOTE =
+  "Health-related information is optional and should only be shared with appropriate consent. This hackathon demo uses simulated data only.";
 
 export const CAPACITY_DISTRIBUTION = [
   { label: "4-seater", vehicles: 4 },
@@ -208,7 +444,27 @@ export const BOTTLENECKS = [
     status: "healthy" as const,
     detail: "Demand is not the constraint in this community.",
   },
+  {
+    key: "Accessibility capacity",
+    severity: 55,
+    status: "moderate" as const,
+    detail:
+      "4 passengers require accessibility-compatible vehicles, but only 6 suitable vehicles are currently available.",
+  },
+  {
+    key: "Emergency support coverage",
+    severity: 24,
+    status: "healthy" as const,
+    detail: "Simulated emergency support options are attached to every demo ride.",
+  },
+  {
+    key: "Alternative ride availability",
+    severity: 58,
+    status: "moderate" as const,
+    detail: "Only 3 backup rides exist if a vehicle breaks down during the morning window.",
+  },
 ];
+
 
 export const RIPPLE_STAGES = [
   { label: "Cold start", users: 0, seats: 0, connections: 0, opportunities: 0, referrals: 0 },
