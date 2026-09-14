@@ -444,7 +444,27 @@ export const BOTTLENECKS = [
     status: "healthy" as const,
     detail: "Demand is not the constraint in this community.",
   },
+  {
+    key: "Accessibility capacity",
+    severity: 55,
+    status: "moderate" as const,
+    detail:
+      "4 passengers require accessibility-compatible vehicles, but only 6 suitable vehicles are currently available.",
+  },
+  {
+    key: "Emergency support coverage",
+    severity: 24,
+    status: "healthy" as const,
+    detail: "Simulated emergency support options are attached to every demo ride.",
+  },
+  {
+    key: "Alternative ride availability",
+    severity: 58,
+    status: "moderate" as const,
+    detail: "Only 3 backup rides exist if a vehicle breaks down during the morning window.",
+  },
 ];
+
 
 export const RIPPLE_STAGES = [
   { label: "Cold start", users: 0, seats: 0, connections: 0, opportunities: 0, referrals: 0 },
