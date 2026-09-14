@@ -18,7 +18,45 @@ export type Vehicle = {
   model: string;
   capacity: number;
   availableSeats: number;
+  wheelchairAccessible: boolean;
+  stepFreeEntry: boolean;
+  extraLuggageSpace: boolean;
 };
+
+export type AccessibilityNeed =
+  | "Wheelchair accessible"
+  | "Mobility assistance"
+  | "Step-free access"
+  | "Extra boarding time"
+  | "Visual assistance"
+  | "Hearing assistance"
+  | "No additional assistance required";
+
+export type HealthNeed =
+  | "Medication timing"
+  | "Allergy alert"
+  | "Emergency support requirement"
+  | "Chronic condition support"
+  | "No health-related support needed";
+
+export type EmergencyContact = { name: string; relationship: string };
+
+export type ScoreBreakdown = {
+  route: number;
+  timing: number;
+  capacity: number;
+  accessibility: number;
+  preference: number;
+};
+
+export const ACCESSIBILITY_OPTIONS: AccessibilityNeed[] = [
+  "Wheelchair accessible",
+  "Mobility assistance",
+  "Step-free access",
+  "Extra boarding time",
+  "Visual assistance",
+  "Hearing assistance",
+];
 
 export type Ride = {
   id: string;
